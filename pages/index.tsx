@@ -6,6 +6,7 @@ import { getAllProperties } from "@/utils/api";
 export default function Home() {
   const [properties, setProperties] = useState<PropertyProps[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -14,6 +15,7 @@ export default function Home() {
         setProperties(data);
       } catch (error) {
         console.error("Error fetching properties:", error);
+        setError("Unable to load properties. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -24,6 +26,16 @@ export default function Home() {
 
   if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return (
+      <section className="relative w-full bg-white">
+        <div className="text-center py-12">
+          <p className="text-lg text-red-500">{error}</p>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -92,11 +104,17 @@ export default function Home() {
       </div>
 
       {/* Property Listings Grid */}
-      <div className="grid grid-cols-3 gap-6">
-        {properties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))}
-      </div>
+      {properties.length > 0 ? (
+        <div className="grid grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <PropertyCard key={property.id} property={property} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-lg text-gray-500">No properties available at the moment.</p>
+        </div>
+      )}
     </section>
   );
 };

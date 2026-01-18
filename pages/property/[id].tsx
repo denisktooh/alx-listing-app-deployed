@@ -8,6 +8,7 @@ export default function PropertyDetailPage() {
   const { id } = router.query;
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -17,6 +18,7 @@ export default function PropertyDetailPage() {
         setProperty(data);
       } catch (error) {
         console.error("Error fetching property details:", error);
+        setError("Unable to load property details. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -29,8 +31,12 @@ export default function PropertyDetailPage() {
     return <p>Loading...</p>;
   }
 
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
   if (!property) {
-    return <p>Property not found</p>;
+    return <p>No property available</p>;
   }
 
   return <PropertyDetail property={property} />;
