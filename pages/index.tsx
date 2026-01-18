@@ -24,19 +24,7 @@ export default function Home() {
     fetchProperties();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return (
-      <section className="relative w-full bg-white">
-        <div className="text-center py-12">
-          <p className="text-lg text-red-500">{error}</p>
-        </div>
-      </section>
-    );
-  }
+  // Only block the property grid, not the whole page
 
   return (
     <section className="relative w-full bg-white">
@@ -104,7 +92,16 @@ export default function Home() {
       </div>
 
       {/* Property Listings Grid */}
-      {properties.length > 0 ? (
+      {/* Property Listings Grid */}
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-lg text-gray-500">Loading...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-12">
+          <p className="text-lg text-red-500">{error}</p>
+        </div>
+      ) : properties.length > 0 ? (
         <div className="grid grid-cols-3 gap-6">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
